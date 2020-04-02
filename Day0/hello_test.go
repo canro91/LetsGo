@@ -2,37 +2,6 @@ package main
 
 import "testing"
 
-// Tests should be in a file XXX_test.go
-// Test names should start with Test
-// Tests should have a single param *testing.T
-// There isn't anything like Assert.AreEqual by default
-// See: https://github.com/stretchr/testify
-
-// Examples should contain an "Output" comment
-//func ExampleHello() {
-//    fmt.Println(Hello())
-//    // Output:
-//    // Hello, world!
-//}
-
-// Param types follow param names in functions
-// Return type are between closing parenthesis and opening bracket
-
-// Semicolons are optional at the end of line
-
-// Unused imports give a compilation error
-
-// %q encloses a string inside quotes
-
-// There is no method overloading
-
-// https://stackoverflow.com/a/17891297
-// := declaration + assignment
-// = assignment only
-
-// case statements inside switch don't have break
-// multiple cases are separated by comma
-
 func TestHello(t *testing.T) {
 
     assertAreEqual := func(t *testing.T, expected, actual string){
@@ -71,14 +40,14 @@ func TestHello(t *testing.T) {
         assertAreEqual(t, expected, actual)
     })
 
-    t.Run("Hello_FrenchAndName_ReturnsHelloInSpanish", func(t *testing.T){
+    t.Run("Hello_FrenchAndName_ReturnsHelloInFrench", func(t *testing.T){
         expected := "Bonjour, Alice!"
         actual := Hello("Alice", "French")
 
         assertAreEqual(t, expected, actual)
     })
 
-    t.Run("Hello_FrenchCodeAndName_ReturnsHelloInSpanish", func(t *testing.T){
+    t.Run("Hello_FrenchCodeAndName_ReturnsHelloInFrench", func(t *testing.T){
         expected := "Bonjour, Alice!"
         actual := Hello("Alice", "fr")
 
