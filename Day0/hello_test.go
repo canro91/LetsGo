@@ -6,6 +6,7 @@ import "testing"
 // Test names should start with Test
 // Tests should have a single param *testing.T
 // There isn't anything like Assert.AreEqual by default
+// See: https://github.com/stretchr/testify
 
 // Examples should contain an "Output" comment
 //func ExampleHello() {
@@ -28,6 +29,9 @@ import "testing"
 // https://stackoverflow.com/a/17891297
 // := declaration + assignment
 // = assignment only
+
+// case statements inside switch don't have break
+// multiple cases are separated by comma
 
 func TestHello(t *testing.T) {
 
@@ -60,12 +64,24 @@ func TestHello(t *testing.T) {
         assertAreEqual(t, expected, actual)
     })
 
+    t.Run("Hello_SpanishCodeAndName_ReturnsHelloInSpanish", func(t *testing.T){
+        expected := "Hola, Alice!"
+        actual := Hello("Alice", "es")
+
+        assertAreEqual(t, expected, actual)
+    })
+
     t.Run("Hello_FrenchAndName_ReturnsHelloInSpanish", func(t *testing.T){
         expected := "Bonjour, Alice!"
         actual := Hello("Alice", "French")
 
         assertAreEqual(t, expected, actual)
     })
+
+    t.Run("Hello_FrenchCodeAndName_ReturnsHelloInSpanish", func(t *testing.T){
+        expected := "Bonjour, Alice!"
+        actual := Hello("Alice", "fr")
+
+        assertAreEqual(t, expected, actual)
+    })
 }
-
-
