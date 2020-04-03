@@ -4,3 +4,8 @@
 
 * Params with same type `(int x, int y)` can be simplified like this `(x, y int)`
 * `$ godoc -http=:6060` will open documentation of all installed modules. Custom examples will be listed here
+
+## Loops
+
+* There is only `for`
+* You don't need parenthesis in `for` and brackets are always required
