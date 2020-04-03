@@ -1,0 +1,6 @@
+# Notes
+
+## Functions
+
+* Params with same type `(int x, int y)` can be simplified like this `(x, y int)`
+* `$ godoc -http=:6060` will open documentation of all installed modules. Custom examples will be listed here
