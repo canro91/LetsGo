@@ -7,7 +7,7 @@
 
 ## Loops
 
-* There is only `for`
+* There is only one `for`
 * You don't need parenthesis in `for` and brackets are always required
 
 ## Benchmarks
@@ -22,4 +22,4 @@ func BenchmarkXXX(b *testing.B){
 
 ## Errorf
 
-* %t for bool, %q for string inside quotes, %v is like `ToString`, %d for integers
+* `%t` for bool, `%q` for string inside quotes, `%v` is like `ToString`, `%d` for integers
