@@ -16,23 +16,29 @@ func TestPerimeter(t *testing.T){
 }
 
 func TestArea(t *testing.T){
-	t.Run("Rectangle_ReturnsArea", func(t *testing.T){
-		expected := 12.0
-		rectangle := Rectangle { 3.0, 4.0 }
-		area := rectangle.Area()
-		
-		if expected != area {
-			t.Errorf("Expected %.2f but was %.2f", expected, area)
-		}
-	})
+	assertArea := func(t *testing.T, shape Shape, expectedArea float64){
+		t.Helper()
 
-	t.Run("Circle_ReturnsArea", func(t *testing.T){
-		expected := math.Pi
-		circle := Circle { 1.0 }
-		area := circle.Area()
+		area := shape.Area()
 		
-		if expected != area {
-			t.Errorf("Expected %.2f but was %.2f", expected, area)
+		if expectedArea != area {
+			t.Errorf("%#v Expected %.2f but was %.2f", shape, expectedArea, area)
 		}
-	})
+	}
+
+	areaTests := []struct {
+		name    string
+		shape   Shape
+		hasArea float64
+	}{
+		{ name: "Rectangle", shape: Rectangle { 3.0, 4.0 }, hasArea: 12.0 },
+		{ name: "Circle",    shape: Circle { 1.0 },         hasArea: math.Pi },
+		{ name: "Triangle",  shape: Triangle{3.0, 4.0},     hasArea: 6.0 },
+	}
+
+	for _, tt := range areaTests {
+		t.Run(tt.name, func(t *testing.T) {
+			assertArea(t, tt.shape, tt.hasArea)	
+		})
+	}
 }
