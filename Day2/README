@@ -1,0 +1,4 @@
+# Notes
+
+* `Println` doesn't do formatting
+* You have to seed the random generator `rand.Seed(xxx)`. If you want a different result each time `rand.Seed(time.Now().UnixNano())`
