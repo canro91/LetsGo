@@ -27,3 +27,28 @@ func TestSumAll(t *testing.T){
 		t.Errorf("Expected %d but was %d", expected, sum)
 	}	
 }
+
+func TestSumTails(t *testing.T){
+	checkSums := func(t *testing.T, expected, actual []int){
+		t.Helper()
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Errorf("Expected %d but was %d", expected, actual)
+		}
+	}
+
+
+	t.Run("SumTails_NonEmptyArrays_ReturnsSum", func(t *testing.T){
+		expected := []int{ 5, 2 }
+		sum := SumTails([]int{ 1,2,3 }, []int { 1,2 })
+		
+		checkSums(t, expected, sum)
+	})
+
+	t.Run("SumTails_EmptyArray_ReturnsSum", func(t *testing.T){
+		expected := []int{ 0, 2 }
+		sum := SumTails([]int{}, []int { 1,2 })
+		
+		checkSums(t, expected, sum)
+	})
+}

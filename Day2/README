@@ -6,3 +6,4 @@
 * Arrays are fixed-length. You can't pass `[5]int{ 1,2,3,4,5 }` into a function that receives `[4]int`
 * `range` is like a `foreach` with an index and the value. `for  i, n := range array` vs `foreach (var item in array.Select((n, i) => new { n, i })`
 * variadic functions are like functions with `params`
+* Go has slices like Python
