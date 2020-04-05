@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os/user"
 	"bufio"
 	"fmt"
 	"os"
@@ -11,7 +12,10 @@ import (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("> ")
+		user, _ := user.Current()
+		hostname, _ := os.Hostname()
+
+		fmt.Printf("%s at %s in %s > ", user.Username, hostname, currentDir())
 		input, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -22,6 +26,21 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 		}
 	}
+}
+
+func currentDir() string {
+	cwd, _ := os.Getwd()
+	homeDir, _ := os.UserHomeDir()
+
+	dir := strings.Replace(cwd, homeDir, "~", 1)
+	folders := strings.Split(dir, "/")
+	if len(folders) <= 2 {
+		return dir
+	} else {
+		lastTwo := folders[len(folders) - 2:]
+		shortCwd := strings.Join(lastTwo, "/")
+		return ".../" + shortCwd
+	}	
 }
 
 func execInput(input string) error {
