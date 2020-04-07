@@ -5,3 +5,4 @@ Day 1: [Integers](https://github.com/quii/learn-go-with-tests/blob/master/intege
 Day 2: "Guess the number" game, [Array and Slices](https://github.com/quii/learn-go-with-tests/blob/master/arrays-and-slices.md)
 Day 3: [Structs, methods & interfaces](https://github.com/quii/learn-go-with-tests/blob/master/structs-methods-and-interfaces.md)
 Day 4: [Writing a simple shell in Go](https://sj14.gitlab.io/post/2018-07-01-go-unix-shell/) from [Build your own shell](https://github.com/danistefanovic/build-your-own-x#build-your-own-shell)
+Day 5: Revisit "Writing a simple shell in Go" 

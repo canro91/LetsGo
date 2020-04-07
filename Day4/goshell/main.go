@@ -1,21 +1,19 @@
 package main
 
 import (
-	"os/user"
 	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
+	"os/user"
 	"strings"
 )
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		user, _ := user.Current()
-		hostname, _ := os.Hostname()
+		printPrompt()
 
-		fmt.Printf("%s at %s in %s > ", user.Username, hostname, currentDir())
 		input, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -28,6 +26,19 @@ func main() {
 	}
 }
 
+func printPrompt() {
+	user, _ := user.Current()
+	hostname, _ := os.Hostname()
+
+	out, _ := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+	if len(out) == 0 {
+		fmt.Printf("%s at %s in %s > ", user.Username, hostname, currentDir())
+	} else {
+		branchName := strings.TrimSuffix(string(out), "\n")
+		fmt.Printf("%s at %s in %s (%s) > ", user.Username, hostname, currentDir(), branchName)
+	}
+}
+
 func currentDir() string {
 	cwd, _ := os.Getwd()
 	homeDir, _ := os.UserHomeDir()
@@ -37,10 +48,10 @@ func currentDir() string {
 	if len(folders) <= 2 {
 		return dir
 	} else {
-		lastTwo := folders[len(folders) - 2:]
+		lastTwo := folders[len(folders)-2:]
 		shortCwd := strings.Join(lastTwo, "/")
 		return ".../" + shortCwd
-	}	
+	}
 }
 
 func execInput(input string) error {
