@@ -10,7 +10,7 @@ const maxNumber = 20
 const retries = 3
 
 func main(){
-		number := rand.Intn(maxNumber)
+	number := rand.Intn(maxNumber)
 	won := false
 
 	fmt.Println("Guess the number. It's between 0 and", maxNumber, ". You have", retries, " retries")
@@ -19,7 +19,7 @@ func main(){
 		var input int
 		fmt.Scanf("%d", &input)
 		if input < 0 || input > maxNumber {
-			fmt.Println("Dude, did I told you the number is between 0 and,", maxNumber, "?")
+			fmt.Println("Dude, did I tell you the number is between 0 and,", maxNumber, "?")
 			fmt.Println("You have lost one retry...")
 		} else if input == number {
 			fmt.Println("That's it...You won")
