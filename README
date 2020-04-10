@@ -10,3 +10,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 5: Revisit "Writing a simple shell in Go", [Pointers & errors](https://github.com/quii/learn-go-with-tests/blob/master/pointers-and-errors.md)
 * Day 6: [Maps](https://github.com/quii/learn-go-with-tests/blob/master/maps.md)
 * Day 7: [Dependency Injection](https://github.com/quii/learn-go-with-tests/blob/master/dependency-injection.md)
+* Day 8: "Fortune" clone
