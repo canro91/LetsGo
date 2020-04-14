@@ -13,4 +13,5 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 8: "Fortune" clone
 * Day 9: Word wrap, [Cowsay](https://flaviocopes.com/go-tutorial-cowsay/)
 * Day 10: [Go lolcat](https://flaviocopes.com/go-tutorial-lolcat/)
-* Day 11: [Visualize your local Git contributions with Go](https://flaviocopes.com/go-git-contributions/)
+* Day 11: [Visualize your local Git contributions with Go](https://flaviocopes.com/go-git-contributions)
+* Day 12: [Mocking](https://github.com/quii/learn-go-with-tests/blob/master/mocking.md)
