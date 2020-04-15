@@ -15,3 +15,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 10: [Go lolcat](https://flaviocopes.com/go-tutorial-lolcat/)
 * Day 11: [Visualize your local Git contributions with Go](https://flaviocopes.com/go-git-contributions)
 * Day 12: [Mocking](https://github.com/quii/learn-go-with-tests/blob/master/mocking.md)
+* Day 13: Revisiting [pointers](https://golangbot.com/pointers/), functions and [methods](https://golangbot.com/methods/) for [structs](https://golangbot.com/structs/)
