@@ -28,6 +28,16 @@ func TestKeyValueStore(t *testing.T) {
 
 	err = store.Get("session-1", &found)
 	assertError(t, err, ErrKeyNotFound)
+
+}
+
+func TestRetrieve(t *testing.T) {
+	store, err := Open("sessions.db")
+	assertNoError(t, err)
+
+	var found Session
+	err = store.Get("session-1", &found)
+	assertError(t, err, ErrKeyNotFound)
 }
 
 func assertNoError(t *testing.T, err error) {

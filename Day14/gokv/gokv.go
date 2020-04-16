@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrKeyNotFound = errors.New("Key not found")
+	bucketName     = []byte("GoKV")
 )
 
 type KVStore struct {
@@ -21,30 +22,29 @@ func Open(path string) (*KVStore, error) {
 		return nil, err
 	}
 
-	store := &KVStore{db}
-	return store, nil
+	err = db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists(bucketName)
+		return err
+	})
+
+	if err != nil {
+		return nil, err
+	} else {
+		store := &KVStore{db}
+		return store, nil
+	}
 }
 
 func (store *KVStore) Put(key string, value interface{}) error {
 	err := store.db.Update(func(tx *bolt.Tx) error {
-		bucketName := []byte("GoKV")
-		bucket, _ := tx.CreateBucketIfNotExists(bucketName)
-
-		err := bucket.Put(encode(key), encode(value))
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return tx.Bucket(bucketName).Put([]byte(key), encode(value))
 	})
 	return err
 }
 
 func (store *KVStore) Get(key string, e interface{}) error {
 	err := store.db.View(func(tx *bolt.Tx) error {
-		bucketName := []byte("GoKV")
-
-		value := tx.Bucket(bucketName).Get(encode(key))
+		value := tx.Bucket(bucketName).Get([]byte(key))
 		if value == nil {
 			return ErrKeyNotFound
 		}
@@ -57,14 +57,7 @@ func (store *KVStore) Get(key string, e interface{}) error {
 
 func (store *KVStore) Delete(key string) error {
 	err := store.db.Update(func(tx *bolt.Tx) error {
-		bucketName := []byte("GoKV")
-
-		err := tx.Bucket(bucketName).Delete(encode(key))
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return tx.Bucket(bucketName).Delete([]byte(key))
 	})
 	return err
 }
@@ -77,9 +70,7 @@ func encode(e interface{}) []byte {
 }
 
 func decode(value []byte, e interface{}) {
-	buffer := bytes.Buffer{}
-	buffer.Write(value)
-
-	decoder := gob.NewDecoder(&buffer)
+	reader := bytes.NewReader(value)
+	decoder := gob.NewDecoder(reader)
 	decoder.Decode(e)
 }
