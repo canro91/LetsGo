@@ -114,7 +114,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Use a pipe, please")
 	} else {
 		reader := bufio.NewReader(os.Stdin)
-		// Why not simply:
+		// Why not simply?
 		//input, _ := reader.ReadString('\n')
 		var lines []string
 		for {
