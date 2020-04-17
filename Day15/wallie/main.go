@@ -1,15 +1,15 @@
 package main
 
 import (
-	"strconv"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"regexp"
+	"strconv"
 )
 
 type TopResponse struct {
@@ -25,61 +25,67 @@ type TopResponse struct {
 	} `json:"data"`
 }
 
-func main() {
-	if err := run(); err != nil {
-		os.Exit(1)
-	}
-}
-
-func run() error {
+func downloadTopPost() (TopResponse, error) {
 	request, err := http.NewRequest("GET", "http://www.reddit.com/r/wallpaper/top/.json?sort=new&limit=1", nil)
 	request.Header.Add("User-Agent", "Wallie/1.0")
 
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "We can't retrieve top posts from /r/wallpaper. You have internet connection?")
-		return err
+		return TopResponse{}, err
 	}
 
 	body, _ := ioutil.ReadAll(response.Body)
 	var topResponse TopResponse
 	json.Unmarshal(body, &topResponse)
+	return topResponse, nil
+}
 
-	post := topResponse.Data.Children[0].Data
-	fmt.Println(post.Title)
-	fmt.Println(post.URL)
-	fmt.Println(post.Ups)
+func getFilename(url, domain string) string {
+	re := regexp.MustCompile(`http(s)?://` + domain + `/`)
+	filename := re.ReplaceAllString(url, "")
+	return filename
+}
 
-	response, err = http.Get(post.URL)
+func downloadImage(url, path string) error {
+	response, err := http.Get(url)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "We can't retrieve the wallpaper. You have internet connection?")
+		return err
 	}
 	defer response.Body.Close()
 
-	var re = regexp.MustCompile(`http(s)?://` + post.Domain + `/`)
-	filename := re.ReplaceAllString(post.URL, "")
-
-	path := "img/" + filename
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, response.Body)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
-	dir, err := os.Getwd()
-
-	command := exec.Command("osascript", "-e", `tell application "System Events" to tell every desktop to set picture to `+strconv.Quote(dir+"/"+path))
-	command.Stdout = os.Stdout
-	command.Stderr = os.Stderr
-	command.Run()
-
 	return nil
+}
+
+func changeWallpaper(path string) {
+	exec.Command("osascript", "-e", `tell application "System Events" to tell every desktop to set picture to `+strconv.Quote(path)).Run()
+}
+
+func main() {
+	topResponse, err := downloadTopPost()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	post := topResponse.Data.Children[0].Data
+	filename := getFilename(post.URL, post.Domain)
+	currentDir, _ := os.Getwd()
+	absolutePath := currentDir + "/img/" + filename
+	err = downloadImage(post.URL, absolutePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	changeWallpaper(absolutePath)
 }
