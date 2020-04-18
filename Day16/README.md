@@ -23,3 +23,4 @@ Content-type: application/json;charset=utf-8
 * [How to build a basic slackbot: a beginner’s guide](https://www.freecodecamp.org/news/how-to-build-a-basic-slackbot-a-beginners-guide-6b40507db5c5/)
 * [Joke teller bot](https://www.youtube.com/watch?v=nyyXTIL3Hkw)
 * [Slacker](https://github.com/shomali11/slacker)
+* [GoQuery](https://github.com/PuerkitoBio/goquery)
