@@ -17,3 +17,5 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 12: [Mocking](https://github.com/quii/learn-go-with-tests/blob/master/mocking.md)
 * Day 13: Revisiting [pointers](https://golangbot.com/pointers/), functions and [methods](https://golangbot.com/methods/) for [structs](https://golangbot.com/structs/)
 * Day 14: [Persistent key-value store](https://www.opsdash.com/blog/persistent-key-value-store-golang.html)
+* Day 15: [Change wallpaper](https://forum.golangbridge.org/t/beginner-to-golang-and-coding-projects/5198/4) from /r/wallpaper subreddit
+* Day 16: [A Slack bot](https://labs.unacast.com/writing-a-slack-chatbot-in-golang-31758cba86fe) to convert currencies
