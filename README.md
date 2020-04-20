@@ -1,6 +1,6 @@
 # Let's Go: Learn Go in 30 days
 
-This is my jounery to learn Go in 30 days throught projects and hand-on tutorials. You can find all resources I've been using day after day. I was inspired by the mantra _"Learn something by building"_ after reading _Pragmatic Thinking and Learning_ book
+This is my jounery to learn Go in 30 days throught projects and hand-on tutorials. You can find all resources I've been using day after day. I was inspired by the mantra _"Learn something by building"_ after reading _Pragmatic Thinking and Learning_ book. To learn most of the concepts I've been using [Learn Go with Tests](https://github.com/quii/learn-go-with-tests)
 
 * Day 0: [Install](https://github.com/quii/learn-go-with-tests/blob/master/install-go.md), [Hello, world](https://github.com/quii/learn-go-with-tests/blob/master/hello-world.md)
 * Day 1: [Integers](https://github.com/quii/learn-go-with-tests/blob/master/integers.md), [Iteration](https://github.com/quii/learn-go-with-tests/blob/master/iteration.md)
@@ -20,3 +20,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 15: [Change wallpaper](https://forum.golangbridge.org/t/beginner-to-golang-and-coding-projects/5198/4) from /r/wallpaper subreddit
 * Day 16: [A Slack bot](https://labs.unacast.com/writing-a-slack-chatbot-in-golang-31758cba86fe) to convert currencies
 * Day 17: Revisiting [errors](https://gobyexample.com/errors) [again](https://golangbot.com/error-handling/)
+* Day 18: Linked List
