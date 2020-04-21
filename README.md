@@ -21,3 +21,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 16: [A Slack bot](https://labs.unacast.com/writing-a-slack-chatbot-in-golang-31758cba86fe) to convert currencies
 * Day 17: Revisiting [errors](https://gobyexample.com/errors) [again](https://golangbot.com/error-handling/)
 * Day 18: Linked List
+* Day 19: [Concurrency](https://github.com/quii/learn-go-with-tests/blob/master/concurrency.md)
