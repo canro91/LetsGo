@@ -24,3 +24,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 19: [Concurrency](https://github.com/quii/learn-go-with-tests/blob/master/concurrency.md)
 * Day 20: [Select](https://github.com/quii/learn-go-with-tests/blob/master/select.md)
 * Day 21: [The Super tiny compiler](https://github.com/hazbo/the-super-tiny-compiler)
+* Day 22: [Reflection](https://github.com/quii/learn-go-with-tests/blob/master/reflection.md)
