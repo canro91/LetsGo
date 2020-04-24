@@ -25,3 +25,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 20: [Select](https://github.com/quii/learn-go-with-tests/blob/master/select.md)
 * Day 21: [The Super tiny compiler](https://github.com/hazbo/the-super-tiny-compiler)
 * Day 22: [Reflection](https://github.com/quii/learn-go-with-tests/blob/master/reflection.md)
+* Day 23: [REST API with Fiber](https://tutorialedge.net/golang/basic-rest-api-go-fiber)
