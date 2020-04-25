@@ -28,5 +28,19 @@ func (p *Product) createProduct(db *sql.DB) error {
 }
 
 func getProducts(db *sql.DB, start, count int) ([]Product, error) {
-	return nil, errors.New("NotImplemented")
+	rows, err := db.Query("SELECT id, name, price FROM products LIMIT $1 OFFSET $2", count, start)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    products := []Product{}
+    for rows.Next() {
+        var p Product
+        if err := rows.Scan(&p.ID, &p.Name, &p.Price); err != nil {
+            return nil, err
+        }
+        products = append(products, p)
+    }
+    return products, nil
 }
