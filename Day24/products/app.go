@@ -30,6 +30,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/products", a.getAllProducts).Methods("GET")
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getSingleProduct).Methods("GET")
+	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
 }
 
 func (a *App) Run(address string) {
@@ -93,6 +94,31 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusCreated, product)
+}
+
+func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid product id")
+		return
+	}
+
+	var product Product
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&product); err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid request")
+		return
+	}
+	defer r.Body.Close()
+	product.ID = id
+
+	if err := product.updateProduct(a.DB); err != nil {
+        respondWithError(w, http.StatusInternalServerError, err.Error())
+        return
+    }
+
+    respondWithJSON(w, http.StatusOK, product)
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {

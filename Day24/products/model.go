@@ -26,7 +26,16 @@ func (p *Product) getProduct(db *sql.DB) error {
 }
 
 func (p *Product) updateProduct(db *sql.DB) error {
-	return errors.New("NotImplemented")
+    stmt, err := db.Prepare("UPDATE products SET name=$1, price=$2 WHERE id=$3")
+	if err != nil {
+		return err
+    }
+
+	_, err = stmt.Exec(p.Name, p.Price, p.ID)
+	if err != nil {
+		return err
+    }
+    return nil
 }
 
 func (p *Product) deleteProduct(db *sql.DB) error {
