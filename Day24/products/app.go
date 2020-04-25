@@ -1,13 +1,13 @@
 package main
 
 import (
-	"encoding/json"
-	"strconv"
-	"net/http"
 	"database/sql"
+	"encoding/json"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"net/http"
+	"strconv"
 )
 
 type App struct {
@@ -17,7 +17,7 @@ type App struct {
 
 func (a *App) Initialize() {
 	var err error
-	a.DB, err = sql.Open("sqlite3", "products.db")
+	a.DB, err = sql.Open("sqlite3", "./products.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,10 +26,10 @@ func (a *App) Initialize() {
 	a.InitializeRoutes()
 }
 
-func (a *App) InitializeRoutes(){
+func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/products", a.getAllProducts).Methods("GET")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getSingleProduct).Methods("GET")
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
+	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getSingleProduct).Methods("GET")
 }
 
 func (a *App) Run(address string) {
@@ -37,23 +37,23 @@ func (a *App) Run(address string) {
 }
 
 func (a *App) getAllProducts(w http.ResponseWriter, r *http.Request) {
-    count, _ := strconv.Atoi(r.FormValue("count"))
-    start, _ := strconv.Atoi(r.FormValue("start"))
+	count, _ := strconv.Atoi(r.FormValue("count"))
+	start, _ := strconv.Atoi(r.FormValue("start"))
 
-    if count > 10 || count < 1 {
-        count = 10
-    }
-    if start < 0 {
-        start = 0
-    }
+	if count > 10 || count < 1 {
+		count = 10
+	}
+	if start < 0 {
+		start = 0
+	}
 
-    products, err := getProducts(a.DB, start, count)
-    if err != nil {
-        respondWithError(w, http.StatusInternalServerError, err.Error())
-        return
-    }
+	products, err := getProducts(a.DB, start, count)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 
-    respondWithJSON(w, http.StatusOK, products)
+	respondWithJSON(w, http.StatusOK, products)
 }
 
 func (a *App) getSingleProduct(w http.ResponseWriter, r *http.Request) {
@@ -66,14 +66,14 @@ func (a *App) getSingleProduct(w http.ResponseWriter, r *http.Request) {
 
 	product := Product{ID: id}
 	if err := product.getProduct(a.DB); err != nil {
-        switch err {
-        case sql.ErrNoRows:
-            respondWithError(w, http.StatusNotFound, "Product not found")
-        default:
-            respondWithError(w, http.StatusInternalServerError, err.Error())
-        }
-        return
-    }
+		switch err {
+		case sql.ErrNoRows:
+			respondWithError(w, http.StatusNotFound, "Product not found")
+		default:
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
 
 	respondWithJSON(w, http.StatusOK, product)
 }
@@ -88,7 +88,7 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if err := product.createProduct(a.DB); err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())		
+		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -96,13 +96,13 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
-    respondWithJSON(w, code, map[string]string{"error": message})
+	respondWithJSON(w, code, map[string]string{"error": message})
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-    response, _ := json.Marshal(payload)
+	response, _ := json.Marshal(payload)
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(code)
-    w.Write(response)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
 }

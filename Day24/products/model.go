@@ -12,7 +12,17 @@ type Product struct {
 }
 
 func (p *Product) getProduct(db *sql.DB) error {
-    return db.QueryRow("SELECT id, name, price FROM products WHERE id = $1", p.ID).Scan(&p.Name, &p.Price)
+    stmt, err := db.Prepare("SELECT name, price FROM products WHERE id=$1")
+	if err != nil {
+		return err
+	}
+    defer stmt.Close()
+
+	err = stmt.QueryRow(p.ID).Scan(&p.Name, &p.Price)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p *Product) updateProduct(db *sql.DB) error {
@@ -24,23 +34,39 @@ func (p *Product) deleteProduct(db *sql.DB) error {
 }
 
 func (p *Product) createProduct(db *sql.DB) error {
-    return db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2); SELECT last_insert_rowid()", p.Name, p.Price).Scan(&p.ID)
+	stmt, err := db.Prepare("INSERT INTO products(name, price) VALUES($1, $2)")
+	if err != nil {
+		return err
+    }
+
+	res, err := stmt.Exec(p.Name, p.Price)
+	if err != nil {
+		return err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+    }
+
+	p.ID = int(id)
+	return nil
 }
 
 func getProducts(db *sql.DB, start, count int) ([]Product, error) {
 	rows, err := db.Query("SELECT id, name, price FROM products LIMIT $1 OFFSET $2", count, start)
-    if err != nil {
-        return nil, err
-    }
-    defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-    products := []Product{}
-    for rows.Next() {
-        var p Product
-        if err := rows.Scan(&p.ID, &p.Name, &p.Price); err != nil {
-            return nil, err
-        }
-        products = append(products, p)
-    }
-    return products, nil
+	products := []Product{}
+	for rows.Next() {
+		var p Product
+		if err := rows.Scan(&p.ID, &p.Name, &p.Price); err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+	return products, nil
 }
