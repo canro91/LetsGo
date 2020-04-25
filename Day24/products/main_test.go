@@ -164,6 +164,8 @@ func executeRequest(r *http.Request) *httptest.ResponseRecorder {
 }
 
 func checkResponseCode(t *testing.T, expectedStatusCode, actualStatusCode int) {
+	t.Helper()
+
 	if expectedStatusCode != actualStatusCode {
 		t.Errorf("Expected response code %d. Got %d\n", expectedStatusCode, actualStatusCode)
 	}

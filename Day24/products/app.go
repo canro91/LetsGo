@@ -31,6 +31,7 @@ func (a *App) InitializeRoutes() {
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getSingleProduct).Methods("GET")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
+	a.Router.HandleFunc("/product/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
 }
 
 func (a *App) Run(address string) {
@@ -114,11 +115,28 @@ func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	product.ID = id
 
 	if err := product.updateProduct(a.DB); err != nil {
-        respondWithError(w, http.StatusInternalServerError, err.Error())
-        return
-    }
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 
-    respondWithJSON(w, http.StatusOK, product)
+	respondWithJSON(w, http.StatusOK, product)
+}
+
+func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid product id")
+		return
+	}
+
+	product := Product{ID: id}
+	if err := product.deleteProduct(a.DB); err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {

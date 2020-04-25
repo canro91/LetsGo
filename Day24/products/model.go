@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 )
 
 type Product struct {
@@ -12,11 +11,11 @@ type Product struct {
 }
 
 func (p *Product) getProduct(db *sql.DB) error {
-    stmt, err := db.Prepare("SELECT name, price FROM products WHERE id=$1")
+	stmt, err := db.Prepare("SELECT name, price FROM products WHERE id=$1")
 	if err != nil {
 		return err
 	}
-    defer stmt.Close()
+	defer stmt.Close()
 
 	err = stmt.QueryRow(p.ID).Scan(&p.Name, &p.Price)
 	if err != nil {
@@ -26,27 +25,36 @@ func (p *Product) getProduct(db *sql.DB) error {
 }
 
 func (p *Product) updateProduct(db *sql.DB) error {
-    stmt, err := db.Prepare("UPDATE products SET name=$1, price=$2 WHERE id=$3")
+	stmt, err := db.Prepare("UPDATE products SET name=$1, price=$2 WHERE id=$3")
 	if err != nil {
 		return err
-    }
+	}
 
 	_, err = stmt.Exec(p.Name, p.Price, p.ID)
 	if err != nil {
 		return err
-    }
-    return nil
+	}
+	return nil
 }
 
 func (p *Product) deleteProduct(db *sql.DB) error {
-	return errors.New("NotImplemented")
+	stmt, err := db.Prepare("DELETE FROM products WHERE id=$1")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(p.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p *Product) createProduct(db *sql.DB) error {
 	stmt, err := db.Prepare("INSERT INTO products(name, price) VALUES($1, $2)")
 	if err != nil {
 		return err
-    }
+	}
 
 	res, err := stmt.Exec(p.Name, p.Price)
 	if err != nil {
@@ -56,7 +64,7 @@ func (p *Product) createProduct(db *sql.DB) error {
 	id, err := res.LastInsertId()
 	if err != nil {
 		return err
-    }
+	}
 
 	p.ID = int(id)
 	return nil
