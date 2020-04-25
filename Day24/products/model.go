@@ -12,7 +12,7 @@ type Product struct {
 }
 
 func (p *Product) getProduct(db *sql.DB) error {
-	return errors.New("NotImplemented")
+    return db.QueryRow("SELECT id, name, price FROM products WHERE id = $1", p.ID).Scan(&p.Name, &p.Price)
 }
 
 func (p *Product) updateProduct(db *sql.DB) error {
@@ -24,7 +24,7 @@ func (p *Product) deleteProduct(db *sql.DB) error {
 }
 
 func (p *Product) createProduct(db *sql.DB) error {
-	return errors.New("NotImplemented")
+    return db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2); SELECT last_insert_rowid()", p.Name, p.Price).Scan(&p.ID)
 }
 
 func getProducts(db *sql.DB, start, count int) ([]Product, error) {
