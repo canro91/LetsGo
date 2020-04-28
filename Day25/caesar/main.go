@@ -52,27 +52,15 @@ func main() {
 }
 
 func encrypt(k int, plainText string) {
-	for _, c := range plainText {
-		if !unicode.IsLetter(c) {
-			fmt.Print(string(c))
-			continue
-		}
-
-		var factor int
-		if unicode.IsUpper(c) {
-			factor = 'A'
-		} else {
-			factor = 'a'
-		}
-
-		e := (((int(c) + k) - factor) % 26) + factor
-		fmt.Print(string(e))
-	}
-	fmt.Println()
+	shift(plainText, k)
 }
 
 func decrypt(k int, cipherText string) {
-	for _, c := range cipherText {
+	shift(cipherText, -k)
+}
+
+func shift(text string, shift int) {
+	for _, c := range text {
 		if !unicode.IsLetter(c) {
 			fmt.Print(string(c))
 			continue
@@ -85,7 +73,7 @@ func decrypt(k int, cipherText string) {
 			factor = 'a'
 		}
 
-		e := (((int(c) - k) - factor) % 26) + factor
+		e := (((int(c) + shift) - factor) % 26) + factor
 		fmt.Print(string(e))
 	}
 	fmt.Println()
