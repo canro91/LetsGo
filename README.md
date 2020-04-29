@@ -28,3 +28,5 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 23: [REST API with Fiber](https://tutorialedge.net/golang/basic-rest-api-go-fiber)
 * Day 24: [Build and test a REST API](https://semaphoreci.com/community/tutorials/building-and-testing-a-rest-api-in-go-with-gorilla-mux-and-postgresql)
 * Day 25: [Caesar cipher](https://en.wikipedia.org/wiki/Caesar_cipher)
+* Day 26: [Sync](https://github.com/quii/learn-go-with-tests/blob/master/sync.md)
+* Day 27: [Context](https://github.com/quii/learn-go-with-tests/blob/master/context.md)
