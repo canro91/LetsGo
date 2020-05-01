@@ -1,10 +1,10 @@
 package main
 
 import (
-	"strings"
 	"fmt"
 	"github.com/canro91/30DaysOfGo/Day29/apiclient/client"
 	"log"
+	"strings"
 )
 
 func main() {
@@ -14,13 +14,13 @@ func main() {
 	// myClient, _ := client.NewClient("XYZ", client.WithHttpClient(&http.Client{}))
 	myClient, _ := client.NewClient("XYZ")
 
-	_, err := myClient.CreateBook("The Art of War", "Sun Tzu", 5)
+	_, err := myClient.Books.Post("The Art of War", "Sun Tzu", 5)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("Querying all the books")
-	books, err := myClient.GetAllBooks()
+	books, err := myClient.Books.GetAll()
 	if err != nil {
 		log.Fatal(err)
 	}
