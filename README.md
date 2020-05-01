@@ -31,3 +31,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 26: [Sync](https://github.com/quii/learn-go-with-tests/blob/master/sync.md)
 * Day 27: [Context](https://github.com/quii/learn-go-with-tests/blob/master/context.md)
 * Day 28: [Roman numerals kata](https://github.com/quii/learn-go-with-tests/blob/master/roman-numerals.md)
+* Day 29: [API Client](https://blog.gopheracademy.com/advent-2019/api-clients-humans/)
