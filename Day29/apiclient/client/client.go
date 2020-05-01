@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"time"
 	"bytes"
 	"encoding/json"
@@ -48,7 +49,14 @@ func (c *Client) CreateBook(title, author string, rating int) (*Book, error) {
 		return nil, err
 	}
 
-	resp, err := c.Client.Post("http://localhost:3000/api/v1/Book", "application/json", bytes.NewBuffer(data))
+	// Notice you would have to set up a ApiKey header.
+	// For example:
+	// req, err := http.NewRequest("GET", "http://example.com", nil)
+	// req.Header.Add("X-API-KEY", c.ApiKey)
+	// resp, err := c.Client.Do(req)
+
+	url := fmt.Sprintf("http://%s/api/v1/Book", c.BaseUrl)
+	resp, err := c.Client.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
@@ -62,4 +70,22 @@ func (c *Client) CreateBook(title, author string, rating int) (*Book, error) {
 	}
 
 	return &book, nil
+}
+
+func (c *Client) GetAllBooks() ([]Book, error) {
+	url := fmt.Sprintf("http://%s/api/v1/Book", c.BaseUrl)
+	resp, err := c.Client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	var books []Book
+	err = json.NewDecoder(resp.Body).Decode(&books)
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
 }
