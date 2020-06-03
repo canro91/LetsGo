@@ -1,7 +1,7 @@
 # Notes
 
 * Error is the last returned value
-* Instead of checking if a function returned an error to retun it again, do it directly
+* Instead of checking if a function returned an error to return it again, do it directly
 * Add context to errors
 
 See:
