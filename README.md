@@ -36,3 +36,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 ***
 
 * Day 30: [Create a CLI wrapper for XKCD API](https://eryb.space/2020/05/27/diving-into-go-by-building-a-cli-application.html)
+* Day 31: [Chat with Network Sockets](https://www.thepolyglotdeveloper.com/2017/05/network-sockets-with-the-go-programming-language/)   
