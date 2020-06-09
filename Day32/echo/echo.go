@@ -1,22 +1,14 @@
 package main
 
 import (
-	"strings"
 	"bufio"
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
-func main() {
-	fmt.Println("Starting...")
-	listener, err := net.Listen("tcp", ":5000")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer listener.Close()
-
-	conn, err := listener.Accept()
+func handler(conn net.Conn) {
 	conn.Write([]byte("Welcome! Say anything...\n"))
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')
@@ -32,5 +24,23 @@ func main() {
 			fmt.Printf(message)
 			conn.Write([]byte(fmt.Sprintf("You said: %s", message)))
 		}
+	}
+}
+
+func main() {
+	fmt.Println("Starting...")
+	listener, err := net.Listen("tcp", ":5000")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer listener.Close()
+
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Fatalln(err)
+			continue
+		}
+		go handler(conn)
 	}
 }
