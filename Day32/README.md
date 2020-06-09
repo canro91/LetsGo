@@ -4,3 +4,4 @@
 * A simple way to test is to use telnet:
     * To install: `brew install telnet`
     * `telnet localhost 5000`
+    * To exit press Ctrl + ]

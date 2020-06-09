@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"bufio"
 	"fmt"
 	"log"
@@ -13,10 +14,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer listener.Close()
 
 	conn, err := listener.Accept()
+	conn.Write([]byte("Welcome! Say anything...\n"))
 	for {
-		message, _ := bufio.NewReader(conn).ReadString('\n')
-		fmt.Printf(message)
+		message, err := bufio.NewReader(conn).ReadString('\n')
+		if err != nil {
+			conn.Close()
+			break
+		}
+
+		trimmed := strings.TrimSpace(message)
+		if trimmed == "ping" {
+			conn.Write([]byte("pong\n"))
+		} else {
+			fmt.Printf(message)
+			conn.Write([]byte(fmt.Sprintf("You said: %s", message)))
+		}
 	}
 }
