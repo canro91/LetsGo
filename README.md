@@ -40,3 +40,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 32: Revisiting Sockets. [Simple Echo server](https://golangr.com/socket-server/)
 * Day 33: Simple FTP Client
 * Day 34: Revisit Login for FTP Client
+* Day 35: Revisit List files for FTP Client
