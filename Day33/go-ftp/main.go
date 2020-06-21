@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/canro91/30DaysOfGo/Day33/go-ftp/client"
 	"io"
 	"log"
 	"net"
@@ -20,6 +21,12 @@ const (
 	LoggedIn       = 230
 	PassiveMode    = 227
 )
+
+func checkResponse(conn net.Conn, responseCode int) (int, string, error) {
+	reader := bufio.NewReader(conn)
+	tp := textproto.NewReader(reader)
+	return tp.ReadResponse(responseCode)
+}
 
 func login(conn net.Conn, user, password string) error {
 	err := sendCommand(conn, fmt.Sprintf("USER %s", user))
@@ -90,7 +97,7 @@ func ls(conn net.Conn) (string, error) {
 		return "", err
 	}
 
-	message, err = readResponse(connection)
+	message, err = readTextResponse(connection)
 	if err != nil {
 		return "", err
 	}
@@ -103,13 +110,7 @@ func sendCommand(conn net.Conn, command string) error {
 	return err
 }
 
-func checkResponse(conn net.Conn, responseCode int) (int, string, error) {
-	reader := bufio.NewReader(conn)
-	tp := textproto.NewReader(reader)
-	return tp.ReadResponse(responseCode)
-}
-
-func readResponse(conn net.Conn) (string, error) {
+func readTextResponse(conn net.Conn) (string, error) {
 	reader := bufio.NewReader(conn)
 	tp := textproto.NewReader(reader)
 
@@ -130,17 +131,14 @@ func readResponse(conn net.Conn) (string, error) {
 }
 
 func main() {
-	connection, err := net.Dial("tcp", "mirror.us.leaseweb.net:21")
+	client := client.NewClient("mirror.us.leaseweb.net", 21)
+	connection, err := client.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer connection.Close()
 
-	code, _, err := checkResponse(connection, Ready)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("*** Connected %d\n", code)
+	fmt.Println("*** Connected")
 
 	usr := "anonymous"
 	pwd := "anonymous@"
