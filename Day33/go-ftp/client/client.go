@@ -1,10 +1,10 @@
 package client
 
 import (
-	"net/textproto"
 	"bufio"
 	"fmt"
 	"net"
+	"net/textproto"
 )
 
 const (
@@ -17,15 +17,15 @@ const (
 )
 
 type FtpClient struct {
-	conn net.Conn
+	conn     net.Conn
 	Hostname string
-	Port int
+	Port     int
 }
 
-func NewClient(hostname string, port int) (*FtpClient) {
+func NewClient(hostname string, port int) *FtpClient {
 	c := &FtpClient{
 		Hostname: hostname,
-		Port: port,
+		Port:     port,
 	}
 	return c
 }
@@ -45,9 +45,43 @@ func (c *FtpClient) Connect() (net.Conn, error) {
 	return connection, nil
 }
 
+func (c *FtpClient) AnonymousLogin() error {
+	return c.Login("anonymous", "anonymous@")
+}
+
+func (c *FtpClient) Login(username, password string) error {
+	err := c.sendCommand(fmt.Sprintf("USER %s", username), PasswordNeeded)
+	if err != nil {
+		return err
+	}
+	err = c.sendCommand(fmt.Sprintf("PASS %s", password), LoggedIn)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *FtpClient) sendCommand(command string, responseCode int) error {
+	err := c.writeCommand(command)
+	if err != nil {
+		return err
+	}
+	_, _, err = c.checkResponse(responseCode)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *FtpClient) writeCommand(command string) error {
+	_, err := c.conn.Write([]byte(command + "\r\n"))
+	return err
+}
+
 func (c *FtpClient) checkResponse(responseCode int) (int, string, error) {
 	reader := bufio.NewReader(c.conn)
 	tp := textproto.NewReader(reader)
 	return tp.ReadResponse(responseCode)
 }
-

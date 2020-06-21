@@ -28,28 +28,6 @@ func checkResponse(conn net.Conn, responseCode int) (int, string, error) {
 	return tp.ReadResponse(responseCode)
 }
 
-func login(conn net.Conn, user, password string) error {
-	err := sendCommand(conn, fmt.Sprintf("USER %s", user))
-	if err != nil {
-		return err
-	}
-	_, _, err = checkResponse(conn, PasswordNeeded)
-	if err != nil {
-		return err
-	}
-
-	err = sendCommand(conn, fmt.Sprintf("PASS %s", password))
-	if err != nil {
-		return err
-	}
-	_, _, err = checkResponse(conn, LoggedIn)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func parsePassiveModeResponse(response string) (string, int) {
 	re := regexp.MustCompile(`(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)`)
 	values := re.FindStringSubmatch(response)
@@ -137,16 +115,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer connection.Close()
-
 	fmt.Println("*** Connected")
 
-	usr := "anonymous"
-	pwd := "anonymous@"
-	err = login(connection, usr, pwd)
+	err = client.AnonymousLogin()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("*** LoggedIn %s\n", usr)
+	fmt.Println("*** LoggedIn")
 
 	fmt.Printf("*** Listing files:\n")
 	message, err := ls(connection)
