@@ -3,8 +3,12 @@ package client
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"net/textproto"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -30,19 +34,24 @@ func NewClient(hostname string, port int) *FtpClient {
 	return c
 }
 
-func (c *FtpClient) Connect() (net.Conn, error) {
+func (c *FtpClient) Connect() error {
 	address := fmt.Sprintf("%s:%d", c.Hostname, c.Port)
 	connection, err := net.Dial("tcp", address)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	c.conn = connection
 
 	_, _, err = c.checkResponse(Ready)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return connection, nil
+
+	return nil
+}
+
+func (c *FtpClient) Close() {
+	c.conn.Close()
 }
 
 func (c *FtpClient) AnonymousLogin() error {
@@ -50,11 +59,11 @@ func (c *FtpClient) AnonymousLogin() error {
 }
 
 func (c *FtpClient) Login(username, password string) error {
-	err := c.sendCommand(fmt.Sprintf("USER %s", username), PasswordNeeded)
+	_, err := c.sendCommand(fmt.Sprintf("USER %s", username), PasswordNeeded)
 	if err != nil {
 		return err
 	}
-	err = c.sendCommand(fmt.Sprintf("PASS %s", password), LoggedIn)
+	_, err = c.sendCommand(fmt.Sprintf("PASS %s", password), LoggedIn)
 	if err != nil {
 		return err
 	}
@@ -62,17 +71,48 @@ func (c *FtpClient) Login(username, password string) error {
 	return nil
 }
 
-func (c *FtpClient) sendCommand(command string, responseCode int) error {
-	err := c.writeCommand(command)
+func (c *FtpClient) List() (string, error) {
+	_, err := c.sendCommand("TYPE A", Ok)
 	if err != nil {
-		return err
+		return "", err
 	}
-	_, _, err = c.checkResponse(responseCode)
+	pasvResponse, err := c.sendCommand("PASV", PassiveMode)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	address, port := parsePassiveModeResponse(pasvResponse)
+	connection, err := net.Dial("tcp", fmt.Sprintf("%s:%d", address, port))
+	if err != nil {
+		return "", err
+	}
+	defer connection.Close()
+
+	// Notice: LIST is send to the first socket
+	_, err = c.sendCommand("LIST", OpenData)
+	if err != nil {
+		return "", err
+	}
+
+	message, err := readTextResponse(connection)
+	if err != nil {
+		return "", err
+	}
+
+	return message, nil
+}
+
+func (c *FtpClient) sendCommand(command string, responseCode int) (string, error) {
+	err := c.writeCommand(command)
+	if err != nil {
+		return "", err
+	}
+	_, message, err := c.checkResponse(responseCode)
+	if err != nil {
+		return "", err
+	}
+
+	return message, nil
 }
 
 func (c *FtpClient) writeCommand(command string) error {
@@ -84,4 +124,35 @@ func (c *FtpClient) checkResponse(responseCode int) (int, string, error) {
 	reader := bufio.NewReader(c.conn)
 	tp := textproto.NewReader(reader)
 	return tp.ReadResponse(responseCode)
+}
+
+func readTextResponse(conn net.Conn) (string, error) {
+	reader := bufio.NewReader(conn)
+	tp := textproto.NewReader(reader)
+
+	var line string
+	for {
+		nextLine, err := tp.ReadLine()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return "", err
+		}
+
+		line += "\n" + strings.TrimRight(nextLine, "\r\n")
+	}
+
+	return line, nil
+}
+
+func parsePassiveModeResponse(response string) (string, int) {
+	re := regexp.MustCompile(`(\d+),(\d+),(\d+),(\d+),(\d+),(\d+)`)
+	values := re.FindStringSubmatch(response)
+	address := strings.Join(values[1:5], ".")
+
+	a, _ := strconv.Atoi(values[5])
+	b, _ := strconv.Atoi(values[6])
+	port := a*256 + b
+	return address, port
 }
