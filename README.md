@@ -41,3 +41,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 33: Simple FTP Client
 * Day 34: Revisit Login for FTP Client
 * Day 35: Revisit List files for FTP Client
+* Day 36: Refactor FTP Client

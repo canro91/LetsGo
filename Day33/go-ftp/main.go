@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -105,40 +104,9 @@ func sendCommand(conn net.Conn, command string) error {
 }
 
 func checkResponse(conn net.Conn, responseCode int) (int, string, error) {
-	code, message, err := readCodedResponse(conn)
-	if err != nil {
-		return 0, "", err
-	}
-	if code != responseCode {
-		return 0, "", errors.New(fmt.Sprintf("Expected Code %d, but was %d", responseCode, code))
-	}
-	return code, message, nil
-}
-
-// TODO: Take a look at tp.ReadResponse
-func readCodedResponse(conn net.Conn) (int, string, error) {
 	reader := bufio.NewReader(conn)
 	tp := textproto.NewReader(reader)
-
-	line, _ := tp.ReadLine()
-	code := line[:3]
-
-	if line[3:4] == "-" {
-		for {
-			nextLine, err := tp.ReadLine()
-			if err != nil {
-				return 0, "", err
-			}
-
-			line += "\n" + strings.TrimRight(nextLine, "\r\n")
-			if nextLine[0:3] == code && nextLine[3:4] != "-" {
-				break
-			}
-		}
-	}
-
-	codeAsInt, _ := strconv.Atoi(code)
-	return codeAsInt, line, nil
+	return tp.ReadResponse(responseCode)
 }
 
 func readResponse(conn net.Conn) (string, error) {
