@@ -42,3 +42,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 34: Revisit Login for FTP Client
 * Day 35: Revisit List files for FTP Client
 * Day 36: Refactor FTP Client
+* Day 37: [Writing a SQL database from scratch in Go: 1](https://notes.eatonphil.com/database-basics.html)
