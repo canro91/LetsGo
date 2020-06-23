@@ -24,7 +24,7 @@ const (
 	intKeyword    keyword = "int"
 	textKeyword   keyword = "text"
 	whereKeyword  keyword = "where"
-	trueKeyword  keyword = "true"
+	trueKeyword   keyword = "true"
 	falseKeyword  keyword = "false"
 )
 
@@ -36,8 +36,8 @@ const (
 	commaSymbol      symbol = ","
 	leftParenSymbol  symbol = "("
 	rightParenSymbol symbol = ")"
-	concatSymbol     symbol = "||"
 	eqSymbol         symbol = "="
+	concatSymbol     symbol = "||"
 )
 
 type tokenKind uint
@@ -266,16 +266,17 @@ func lexCharacterDelimited(source string, ic cursor, delimiter byte) (*token, cu
 		if c == delimiter {
 			// SQL escapes are via double characters, not backslash.
 			if cur.pointer+1 >= uint(len(source)) || source[cur.pointer+1] != delimiter {
+				cur.pointer++
+				cur.loc.col++
 				return &token{
 					value: string(value),
 					loc:   ic.loc,
 					kind:  stringKind,
 				}, cur, true
-			} else {
-				value = append(value, delimiter)
-				cur.pointer++
-				cur.loc.col++
 			}
+			value = append(value, delimiter)
+			cur.pointer++
+			cur.loc.col++
 		}
 
 		value = append(value, c)
