@@ -1,8 +1,8 @@
 package gosql
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestParse(t *testing.T) {

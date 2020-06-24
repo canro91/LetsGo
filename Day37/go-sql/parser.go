@@ -330,49 +330,49 @@ func parseToken(tokens []*token, initialCursor uint, kind tokenKind) (*token, ui
 func parseColumnDefinitions(tokens []*token, initialCursor uint, delimiter token) (*[]*columnDefinition, uint, bool) {
 	cursor := initialCursor
 
-    cds := []*columnDefinition{}
-    for {
-        if cursor >= uint(len(tokens)) {
-            return nil, initialCursor, false
-        }
+	cds := []*columnDefinition{}
+	for {
+		if cursor >= uint(len(tokens)) {
+			return nil, initialCursor, false
+		}
 
-        // Look for a delimiter
-        current := tokens[cursor]
-        if delimiter.equals(current) {
-            break
-        }
+		// Look for a delimiter
+		current := tokens[cursor]
+		if delimiter.equals(current) {
+			break
+		}
 
-        // Look for a comma
-        if len(cds) > 0 {
-            if !expectToken(tokens, cursor, tokenFromSymbol(commaSymbol)) {
-                helpMessage(tokens, cursor, "Expected comma")
-                return nil, initialCursor, false
-            }
+		// Look for a comma
+		if len(cds) > 0 {
+			if !expectToken(tokens, cursor, tokenFromSymbol(commaSymbol)) {
+				helpMessage(tokens, cursor, "Expected comma")
+				return nil, initialCursor, false
+			}
 
-            cursor++
-        }
+			cursor++
+		}
 
-        // Look for a column name
-        id, newCursor, ok := parseToken(tokens, cursor, identifierKind)
-        if !ok {
-            helpMessage(tokens, cursor, "Expected column name")
-            return nil, initialCursor, false
-        }
-        cursor = newCursor
+		// Look for a column name
+		id, newCursor, ok := parseToken(tokens, cursor, identifierKind)
+		if !ok {
+			helpMessage(tokens, cursor, "Expected column name")
+			return nil, initialCursor, false
+		}
+		cursor = newCursor
 
-        // Look for a column type
-        ty, newCursor, ok := parseToken(tokens, cursor, keywordKind)
-        if !ok {
-            helpMessage(tokens, cursor, "Expected column type")
-            return nil, initialCursor, false
-        }
-        cursor = newCursor
+		// Look for a column type
+		ty, newCursor, ok := parseToken(tokens, cursor, keywordKind)
+		if !ok {
+			helpMessage(tokens, cursor, "Expected column type")
+			return nil, initialCursor, false
+		}
+		cursor = newCursor
 
-        cds = append(cds, &columnDefinition{
-            name:     *id,
-            datatype: *ty,
-        })
-    }
+		cds = append(cds, &columnDefinition{
+			name:     *id,
+			datatype: *ty,
+		})
+	}
 
-    return &cds, cursor, true
+	return &cds, cursor, true
 }
