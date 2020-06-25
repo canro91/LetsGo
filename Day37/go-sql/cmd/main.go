@@ -4,9 +4,70 @@ import (
 	"fmt"
 	"github.com/canro91/30DaysOfGo/Day37/go-sql"
 	"github.com/chzyer/readline"
+	"github.com/olekukonko/tablewriter"
 	"io"
 	"log"
+	"os"
 )
+
+func doSelect(mb gosql.Backend, slct *gosql.SelectStatement) error {
+	results, err := mb.Select(slct)
+	if err != nil {
+		return err
+	}
+
+	if len(results.Rows) == 0 {
+		fmt.Println("(no results)")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	headers := []string{}
+	for _, col := range results.Columns {
+		headers = append(headers, col.Name)
+	}
+	table.SetHeader(headers)
+	table.SetAutoFormatHeaders(false)
+
+	rows := [][]string{}
+	for _, result := range results.Rows {
+		row := []string{}
+		for i, cell := range result {
+			typ := results.Columns[i].Type
+			r := ""
+			switch typ {
+			case gosql.IntType:
+				i := cell.AsInt()
+				r = fmt.Sprintf("%d", i)
+			case gosql.TextType:
+				s := cell.AsText()
+				r = s
+			case gosql.BoolType:
+				b := cell.AsBool()
+				r = "t"
+				if !b {
+					r = "f"
+				}
+			}
+
+			row = append(row, r)
+		}
+
+		rows = append(rows, row)
+	}
+
+	table.SetBorder(false)
+	table.AppendBulk(rows)
+	table.Render()
+
+	if len(rows) == 1 {
+		fmt.Println("(1 result)")
+	} else {
+		fmt.Printf("(%d results)\n", len(rows))
+	}
+
+	return nil
+}
 
 func main() {
 	backend := gosql.NewMemoryBackend()
@@ -52,54 +113,25 @@ repl:
 			case gosql.CreateTableKind:
 				err = backend.CreateTable(ast.Statements[0].CreateTableStatement)
 				if err != nil {
-					log.Fatal(err)
+					fmt.Println("Error creating table:", err)
+					continue repl
 				}
 				fmt.Println("ok")
 
 			case gosql.InsertKind:
 				err = backend.Insert(stmt.InsertStatement)
 				if err != nil {
-					log.Fatal(err)
+					fmt.Println("Error inserting values:", err)
+					continue repl
 				}
 				fmt.Println("ok")
 
 			case gosql.SelectKind:
-				results, err := backend.Select(stmt.SelectStatement)
+				err := doSelect(backend, stmt.SelectStatement)
 				if err != nil {
-					log.Fatal(err)
+					fmt.Println("Error selecting table:", err)
+					continue repl
 				}
-
-				for _, col := range results.Columns {
-					fmt.Printf("| %s", col.Name)
-				}
-				fmt.Println("|")
-
-				for i := 0; i < 20; i++ {
-					fmt.Printf("=")
-				}
-				fmt.Println()
-
-				for _, result := range results.Rows {
-					fmt.Printf("|")
-
-					for i, cell := range result {
-						typ := results.Columns[i].Type
-						s := ""
-						switch typ {
-						case gosql.IntType:
-							s = fmt.Sprintf("%d", cell.AsInt())
-						case gosql.TextType:
-							s = cell.AsText()
-						}
-
-						fmt.Printf(" %s | ", s)
-					}
-
-					fmt.Println()
-				}
-
-				fmt.Println()
-				fmt.Printf("%d results\n", len(results.Rows))
 
 				fmt.Println("ok")
 			}

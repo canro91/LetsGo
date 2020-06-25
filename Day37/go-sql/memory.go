@@ -23,6 +23,10 @@ func (mc MemoryCell) AsText() string {
 	return string(mc)
 }
 
+func (mc MemoryCell) AsBool() bool {
+	return len(mc) != 0
+}
+
 type table struct {
 	columns     []string
 	columnTypes []ColumnType
