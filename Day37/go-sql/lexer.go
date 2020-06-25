@@ -13,19 +13,28 @@ type location struct {
 type keyword string
 
 const (
-	selectKeyword keyword = "select"
-	fromKeyword   keyword = "from"
-	asKeyword     keyword = "as"
-	tableKeyword  keyword = "table"
-	createKeyword keyword = "create"
-	insertKeyword keyword = "insert"
-	intoKeyword   keyword = "into"
-	valuesKeyword keyword = "values"
-	intKeyword    keyword = "int"
-	textKeyword   keyword = "text"
-	whereKeyword  keyword = "where"
-	trueKeyword   keyword = "true"
-	falseKeyword  keyword = "false"
+	selectKeyword     keyword = "select"
+	fromKeyword       keyword = "from"
+	asKeyword         keyword = "as"
+	tableKeyword      keyword = "table"
+	createKeyword     keyword = "create"
+	dropKeyword       keyword = "drop"
+	insertKeyword     keyword = "insert"
+	intoKeyword       keyword = "into"
+	valuesKeyword     keyword = "values"
+	intKeyword        keyword = "int"
+	textKeyword       keyword = "text"
+	boolKeyword       keyword = "boolean"
+	whereKeyword      keyword = "where"
+	andKeyword        keyword = "and"
+	orKeyword         keyword = "or"
+	trueKeyword       keyword = "true"
+	falseKeyword      keyword = "false"
+	uniqueKeyword     keyword = "unique"
+	indexKeyword      keyword = "index"
+	onKeyword         keyword = "on"
+	primarykeyKeyword keyword = "primary key"
+	nullKeyword       keyword = "null"
 )
 
 type symbol string
@@ -37,7 +46,14 @@ const (
 	leftParenSymbol  symbol = "("
 	rightParenSymbol symbol = ")"
 	eqSymbol         symbol = "="
+	neqSymbol        symbol = "<>"
+	neqSymbol2       symbol = "!="
 	concatSymbol     symbol = "||"
+	plusSymbol       symbol = "+"
+	ltSymbol         symbol = "<"
+	lteSymbol        symbol = "<="
+	gtSymbol         symbol = ">"
+	gteSymbol        symbol = ">="
 )
 
 type tokenKind uint
@@ -49,12 +65,50 @@ const (
 	stringKind
 	numericKind
 	boolKind
+	nullKind
 )
 
 type token struct {
 	value string
 	kind  tokenKind
 	loc   location
+}
+
+func (t token) bindingPower() uint {
+	switch t.kind {
+	case keywordKind:
+		switch keyword(t.value) {
+		case andKeyword:
+			fallthrough
+		case orKeyword:
+			return 1
+		}
+	case symbolKind:
+		switch symbol(t.value) {
+		case eqSymbol:
+			fallthrough
+		case neqSymbol:
+			return 2
+
+		case ltSymbol:
+			fallthrough
+		case gtSymbol:
+			return 3
+
+		// For some reason these are grouped separately
+		case lteSymbol:
+			fallthrough
+		case gteSymbol:
+			return 4
+
+		case concatSymbol:
+			fallthrough
+		case plusSymbol:
+			return 5
+		}
+	}
+
+	return 0
 }
 
 func (t *token) equals(other *token) bool {
@@ -92,6 +146,10 @@ lex:
 		if len(tokens) > 0 {
 			hint = " after " + tokens[len(tokens)-1].value
 		}
+		for _, t := range tokens {
+			fmt.Println(t.value)
+		}
+
 		return nil, fmt.Errorf("Unable to lex token%s, at %d:%d", hint, cur.loc.line, cur.loc.col)
 	}
 
@@ -111,6 +169,8 @@ func lexKeyword(source string, ic cursor) (*token, cursor, bool) {
 		intoKeyword,
 		textKeyword,
 		intKeyword,
+		andKeyword,
+		orKeyword,
 		asKeyword,
 		trueKeyword,
 		falseKeyword,
@@ -163,6 +223,7 @@ func lexSymbol(source string, ic cursor) (*token, cursor, bool) {
 	// Syntax that should be kept
 	symbols := []symbol{
 		eqSymbol,
+		neqSymbol,
 		concatSymbol,
 		commaSymbol,
 		leftParenSymbol,
