@@ -12,8 +12,19 @@ type Statement struct {
 }
 
 type SelectStatement struct {
-	item []*expression
-	from token
+	item  *[]*selectItem
+	from  *fromItem
+	where *expression
+}
+
+type selectItem struct {
+	exp      *expression
+	asterisk bool
+	as       *token
+}
+
+type fromItem struct {
+	table *token
 }
 
 type CreateTableStatement struct {
@@ -43,9 +54,17 @@ type expressionKind uint
 
 const (
 	literalKind expressionKind = iota
+	binaryKind
 )
 
 type expression struct {
 	literal *token
+	binary  *binaryExpression
 	kind    expressionKind
+}
+
+type binaryExpression struct {
+	a  expression
+	b  expression
+	op token
 }
