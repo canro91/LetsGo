@@ -44,3 +44,4 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 36: Refactor FTP Client
 * Day 37: [Writing a SQL database from scratch in Go: 1](https://notes.eatonphil.com/database-basics.html)
 * Day 38: [Writing a SQL database from scratch in Go: 2](https://notes.eatonphil.com/database-basics-expressions-and-where.html)
+* Day 39: [Let's create a simple load balancer](https://kasvith.me/posts/lets-create-a-simple-lb-go/)
