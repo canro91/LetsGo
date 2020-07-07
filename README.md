@@ -1,6 +1,6 @@
 # Let's Go: Learn Go in 30 days
 
-This is my jounery to learn Go in 30 days throught projects and hand-on tutorials. You can find all resources I've been using day after day. I was inspired by the mantra _"Learn something by building"_ after reading _Pragmatic Thinking and Learning_ book. To learn most of the concepts I've been using [Learn Go with Tests](https://github.com/quii/learn-go-with-tests)
+This is my jounery to learn Go in 30 days throught projects and hand-on tutorials. You can find all resources I've been using day after day. I was inspired by the mantra _"Learn something by building"_ after reading _Pragmatic Thinking and Learning_ book. To learn most of the concepts I've been using [Learn Go with Tests](https://github.com/quii/learn-go-with-tests). For more resources, see [Let's Go post](https://canro91.github.io/2020/07/05/LetsGoStudyPlan/)
 
 * Day 0: [Install](https://github.com/quii/learn-go-with-tests/blob/master/install-go.md), [Hello, world](https://github.com/quii/learn-go-with-tests/blob/master/hello-world.md)
 * Day 1: [Integers](https://github.com/quii/learn-go-with-tests/blob/master/integers.md), [Iteration](https://github.com/quii/learn-go-with-tests/blob/master/iteration.md)
