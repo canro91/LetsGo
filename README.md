@@ -1,3 +1,7 @@
+<p align="center"><a href="https://canro91.github.io/2020/07/05/LetsGoStudyPlan/" target="_blank"><img src="https://canro91.github.io/assets/posts/2020-07-05-LetsGoStudyPlan/LetsGo.png" width="100%" /></a></p>
+
+<hr />
+
 # Let's Go: Learn Go in 30 days
 
 This is my jounery to learn Go in 30 days throught projects and hand-on tutorials. You can find all resources I've been using day after day. I was inspired by the mantra _"Learn something by building"_ after reading _Pragmatic Thinking and Learning_ book. To learn most of the concepts I've been using [Learn Go with Tests](https://github.com/quii/learn-go-with-tests). For more resources, see [Let's Go post](https://canro91.github.io/2020/07/05/LetsGoStudyPlan/)
