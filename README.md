@@ -1,6 +1,6 @@
-<p align="center"><a href="https://canro91.github.io/2020/07/05/LetsGoStudyPlan/" target="_blank"><img src="https://canro91.github.io/assets/posts/2020-07-05-LetsGoStudyPlan/LetsGo.png" width="100%" /></a></p>
+<p align="center"><img src="https://canro91.github.io/assets/posts/2020-07-05-LetsGoStudyPlan/LetsGo.png" width="100%" /></p>
 
-<hr />
+***
 
 # Let's Go: Learn Go in 30 days
 
@@ -49,3 +49,5 @@ This is my jounery to learn Go in 30 days throught projects and hand-on tutorial
 * Day 37: [Writing a SQL database from scratch in Go: 1](https://notes.eatonphil.com/database-basics.html)
 * Day 38: [Writing a SQL database from scratch in Go: 2](https://notes.eatonphil.com/database-basics-expressions-and-where.html)
 * Day 39: [Let's create a simple load balancer](https://kasvith.me/posts/lets-create-a-simple-lb-go/)
+
+_Starting out or already on the software engineering journey? To help you build future-proof skills, check out <a href="https://imcsarag.gumroad.com/l/streetsmartcoding/?utm_source=github&utm_medium=readme&utm_campaign=lets-go-readme" target="_blank">Street-Smart Coding</a>. The roadmap I wish I had on my journey from junior/mid-level to senior._
